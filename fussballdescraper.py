@@ -31,8 +31,22 @@ def get_team_names(league_url: str, section_name: str) -> list[str]:
     return soup.findAll('div', attrs={'class': TEAM_NAME_CLASS})
 
 
-def get_match_plan_team_names(league_url: str) -> list[str]:
-    return get_team_names(league_url, MATCH_PLAN_SECTION_NAME)
+def get_team_logo(league_url: str, section_name: str) -> list[str]:
+    soup = get_soup(league_url, section_name)
+    return soup.findAll('div', attrs={'class': 'club-logo'})
+
+
+def get_match_plan_teams(league_url: str) -> list[dict[str, str]]:
+    team_names = get_team_names(league_url, MATCH_PLAN_SECTION_NAME)
+    team_logos = get_team_logo(league_url, MATCH_PLAN_SECTION_NAME)
+    res = []
+    for i in range(len(team_names)):
+        res.append({
+            'team_name': team_names[i],
+            'team_logo': team_logos[i],
+        })
+
+    return res
 
 
 def get_league_team_names(league_url: str) -> list[str]:
@@ -44,21 +58,37 @@ def format_team_name(team_name) -> str:
     return team_name.strip(' \t\n\r')
 
 
-def get_matches(team_name: str, league_url: str) -> list[Match]:
+def format_team_logo_src(team_logo) -> str:
+    team_logo = team_logo.find('img').attrs['src']
+    team_logo = team_logo.replace('getLogo/format/3/id', 'getLogo/format/2/id')
+    team_logo = team_logo.replace('//', '')
+    return team_logo
+
+
+def get_matches(team_name: str, league_url: str, game_span: int) -> list[Match]:
     """
     Gets all matches related to a team
 
     Returns a list of all matches related to a team
     """
     matches = []
-    team_names = get_match_plan_team_names(league_url)
+    teams = get_match_plan_teams(league_url)
 
-    for i in range(0, len(team_names), 2):
-        home_team = format_team_name(team_names[i])
-        away_team = format_team_name(team_names[i + 1])
+    for i in range(0, len(teams), 2):
+        if len(matches) == game_span:
+            break
 
-        if home_team == team_name or away_team == team_name:
-            matches.append(Match(len(matches) + 1, home_team, away_team))
+        home_team = teams[i]
+        away_team = teams[i + 1]
+
+        home_team_name = format_team_name(home_team['team_name'])
+        away_team_name = format_team_name(away_team['team_name'])
+
+        home_team_logo = format_team_logo_src(home_team['team_logo'])
+        away_team_logo = format_team_logo_src(away_team['team_logo'])
+
+        if home_team_name == team_name or away_team_name == team_name:
+            matches.append(Match(len(matches) + 1, home_team_name, home_team_logo, away_team_name, away_team_logo))
 
     return matches
 
