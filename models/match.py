@@ -3,14 +3,26 @@
 
 class Match:
     def __init__(self, match_day: int,
-                 home_team: str, home_team_logo_src: str,
-                 away_team: str, away_team_logo_src: str):
+                 team: str, team_logo_src: str,
+                 opponent: str, opponent_logo_src: str,
+                 home_game: bool):
         self.match_day = match_day
-        self.home_team = home_team
-        self.home_team_logo_src = home_team_logo_src
-        self.away_team = away_team
-        self.away_team_logo_src = away_team_logo_src
+        self.team = team
+        self.team_logo_src = team_logo_src
+        self.opponent = opponent
+        self.opponent_logo_src = opponent_logo_src
+        self.home_game = home_game
+
+    def to_dict(self):
+        return {
+            "match_day": self.match_day,
+            "team": self.team,
+            "team_logo_src": self.team_logo_src,
+            "opponent": self.opponent,
+            "opponent_logo_src": self.opponent_logo_src,
+            "home_game": self.home_game
+        }
 
     def __repr__(self):
-        return (f'{self.match_day}.\t{self.home_team}\t-\t{self.away_team}\n'
-                f'{self.home_team_logo_src}\n{self.away_team_logo_src}')
+        return (f'{self.match_day}.\t{self.team}\t-\t{self.opponent}\n'
+                f'{self.team_logo_src}\n{self.opponent_logo_src}')
