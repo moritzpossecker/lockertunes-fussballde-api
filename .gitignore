@@ -1,3 +1,6 @@
+# PyChache
+**/__pycache__/
+
 # Logs
 logs
 *.log
