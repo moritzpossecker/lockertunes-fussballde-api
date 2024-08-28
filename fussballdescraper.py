@@ -52,6 +52,11 @@ def get_match_plan_teams(league_url: str) -> list[dict[str, str]]:
     return res
 
 
+def get_match_plan_results(league_url: str):
+    soup = get_soup(league_url, MATCH_PLAN_SECTION_NAME)
+    return soup.findAll('td', attrs={'class': MATCH_RESULT_CLASS})
+
+
 def get_league_team_names(league_url: str) -> list[str]:
     return get_team_names(league_url, MATCHES_SECTION_NAME)
 
@@ -76,7 +81,11 @@ def get_matches(team_name: str, league_url: str, game_span: int) -> list[Match]:
     """
     matches = []
     teams = get_match_plan_teams(league_url)
+    results = get_match_plan_results(league_url)
 
+    j = 0
+
+    codes = []
     for i in range(0, len(teams), 2):
         if len(matches) == game_span:
             break
@@ -90,6 +99,27 @@ def get_matches(team_name: str, league_url: str, game_span: int) -> list[Match]:
         if away_team_name != team_name and home_team_name != team_name:
             continue
 
+        score_left = results[j].find('span', attrs={'class': 'score-left'})
+        j += 1
+
+        if score_left is None:
+            continue
+
+        encoding = 'shift_jis'
+        score = score_left.get_text(strip=True).encode(encoding=encoding)
+
+        decoded_string = score.decode(encoding=encoding)
+        for char in decoded_string:
+            print(f"&#{hex(ord(char))[1::]}")
+
+        scoreString = ''
+        for s in score:
+            scoreString += str(s) + '/'
+        codes.append(scoreString)
+
+        if score_left.text == '2':
+            continue
+
         home_team_logo = format_team_logo_src(home_team['team_logo'])
         away_team_logo = format_team_logo_src(away_team['team_logo'])
 
@@ -100,6 +130,13 @@ def get_matches(team_name: str, league_url: str, game_span: int) -> list[Match]:
         if away_team_name == team_name:
             matches.append(Match(len(matches) + 1, away_team_name, away_team_logo,
                                  home_team_name, home_team_logo, False))
+
+    codes = codes[1::]
+    print(len(codes))
+    final_codes_set = set(codes)
+    print(len(final_codes_set))
+    for code in final_codes_set:
+        print(code)
 
     return matches
 
@@ -119,3 +156,15 @@ def get_teams(league_url: str) -> list[str]:
         formated_teams.append(format_team_name(team))
 
     return formated_teams
+
+
+if __name__ == '__main__':
+    team_name = 'SG Taucha 99'
+    url = 'https://www.fussball.de/spieltagsuebersicht/sachsenliga-sachsen-landesliga-sachsen-herren-saison2425-sachsen/-/staffel/02PNS2TBRC000003VS5489B3VSSIBR6U-G#!/'
+    game_span = 10000
+
+    matches = get_matches(team_name, url, game_span)
+
+    print(len(matches))
+    #for match in matches:
+        #print(match)
