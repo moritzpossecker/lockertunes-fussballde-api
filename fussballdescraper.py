@@ -10,7 +10,7 @@ Should import get_teams and get_matches
 """
 
 
-def get_soup(url: str, section_name: str) -> BeautifulSoup:
+def get_url(url: str, section_name: str) -> str:
     section_divider = SECTION_DIVIDER
     if not url.endswith('/'):
         section_divider = '/' + section_name
@@ -18,10 +18,13 @@ def get_soup(url: str, section_name: str) -> BeautifulSoup:
     url += section_divider + section_name
 
     if section_name == MATCH_PLAN_SECTION_NAME:
-        url = url.replace(MATCHES_URL_PREFIX, MATCH_PLAN_URL_PREFIX)
-    elif section_name == MATCHES_SECTION_NAME:
-        url = url.replace(MATCH_PLAN_URL_PREFIX, MATCHES_URL_PREFIX)
+        return url.replace(MATCHES_URL_PREFIX, MATCH_PLAN_URL_PREFIX)
+    if section_name == MATCHES_SECTION_NAME:
+        return url.replace(MATCH_PLAN_URL_PREFIX, MATCHES_URL_PREFIX)
 
+
+def get_soup(url: str, section_name: str) -> BeautifulSoup:
+    url = get_url(url, section_name)
     page = requests.get(url)
     return BeautifulSoup(page.content, 'html.parser')
 
@@ -33,7 +36,7 @@ def get_team_names(league_url: str, section_name: str) -> list[str]:
 
 def get_team_logo(league_url: str, section_name: str) -> list[str]:
     soup = get_soup(league_url, section_name)
-    return soup.findAll('div', attrs={'class': 'club-logo'})
+    return soup.findAll('div', attrs={'class': TEAM_LOGO_CLASS})
 
 
 def get_match_plan_teams(league_url: str) -> list[dict[str, str]]:
