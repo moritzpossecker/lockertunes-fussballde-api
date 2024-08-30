@@ -1,4 +1,7 @@
-from flask import Flask, jsonify
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 from fussballdescraper import get_teams, get_matches
 from flask_cors import CORS
 
@@ -33,6 +36,39 @@ def request_matches(team_name: str, league_url: str, game_span: int):
 
     return jsonify(matches_dict), 202
 
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':  
+
+        url = request.form['url']
+        return redirect(url_for('second_page',  
+ url=url))
+    return render_template('index.html')
+
+@app.route('/second_page', methods=['GET', 'POST'])
+def second_page():
+    url = request.args.get('url')
+    teams = get_teams(url)
+    if request.method == 'POST':
+        selected_team = request.form['team']
+        return redirect(url_for('third_page', url=url, selected_team=selected_team))
+
+    return render_template('second.html', url=url, teams=teams)
+
+@app.route('/third_page', methods=['GET', 'POST'])
+def third_page():
+    url = request.args.get('url')
+    selected_team = request.args.get('selected_team')
+    if selected_team:
+        matches = get_matches(selected_team, url, 50)
+        matches_dict = []
+        for match in matches:
+            matches_dict.append(match.to_dict())
+        if request.method == 'POST': 
+            return jsonify(matches_dict), 202
+        return render_template('third.html', matches=matches)
+    return "Keine Daten ausgewählt."
 
 if __name__ == '__main__':
     app.run(debug=True)

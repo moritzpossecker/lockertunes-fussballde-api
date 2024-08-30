@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zweite Seite fussball.de-api</title>
+</head>
+<body>
+    <h1>fussballde-api </h1>
+    <p>Die eingegebene URL ist: {{ url }}</p>
+    <p>Die Mannschaften sind: {{ teams }}</p>
+    <form method="POST">
+        {% for team in teams %}
+        <input type="radio" id="{{ team }}" name="team" value="{{ team }}">
+        <label for="{{ team }}">{{ team }}</label><br>
+        {% endfor %}
+        <input type="submit" value="Auswählen">
+    </form>
+</body>
+</html>

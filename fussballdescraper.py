@@ -95,11 +95,11 @@ def get_matches(team_name: str, league_url: str, game_span: int) -> list[Match]:
 
         if home_team_name == team_name:
             matches.append(Match(len(matches) + 1, home_team_name, home_team_logo,
-                                 away_team_name, away_team_logo, True))
+                                 away_team_name, away_team_logo, True, 'H'))
 
         if away_team_name == team_name:
             matches.append(Match(len(matches) + 1, away_team_name, away_team_logo,
-                                 home_team_name, home_team_logo, False))
+                                 home_team_name, home_team_logo, False, 'A'))
 
     return matches
 
@@ -111,7 +111,6 @@ def get_teams(league_url: str) -> list[str]:
     Returns a list of all teams which are in a specific league
     """
     team_names = get_league_team_names(league_url)
-
     teams_set = set(team_names)
 
     formated_teams = []
