@@ -12,5 +12,5 @@ This API contains following endpoints:
 ### Formatting
 
 - Url's should be sent without `https://www.fussball.de/`
-- Slashes should be replaced with `SHLASH`
+- Slashes should be replaced with `SLASH`
 - Spaces should be replaced with `SPACE`
