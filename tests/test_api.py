@@ -39,9 +39,9 @@ def test_get_matches_no():
 
 def test_get_matches_route():
     response = app.test_client().get(
-        '/get-matches/spieltagsuebersichtSLASHnofv-oberliga-sued-deutschland'\
-        '-oberliga-herren-saison2425-deutschlandSLASH-SLASHstaffelSLASH'\
-        '02PUNGDIE800000AVS5489B4VVTKJJ35/FCSPACEGrimma/12')
-
-    assert response.status_code == 202
+        '/get-matches/spieltagsuebersichtSLASHoberliga-baden-wuerttemberg-deutschland'\
+        '-frauen-oberliga-baden-wuerttemberg-frauen-saison2425-deutschlandSLASH-SLASH'\
+        'staffelSLASH02PV7DNKS4000009VS5489B4VVE5FNTJ-G#!/VfLSPACEHerrenberg/12')
+ 
+    assert response.status_code == 404
     assert response.data.decode('utf-8') == '[]\n'
