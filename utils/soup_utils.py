@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-from url_utils import get_url
+from utils.url_utils import get_url
 
 
 def get_soup(url: str, section_name: str) -> BeautifulSoup:

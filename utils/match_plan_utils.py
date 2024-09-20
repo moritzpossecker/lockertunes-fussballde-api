@@ -1,4 +1,4 @@
-from teams_utils import get_team_logo, get_team_names
+from utils.teams_utils import get_team_logo, get_team_names
 from resources.fussballde_constants import *
 
 

@@ -1,4 +1,4 @@
-from soup_utils import get_soup
+from utils.soup_utils import get_soup
 from resources.fussballde_constants import *
 
 
