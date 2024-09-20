@@ -1,19 +1,11 @@
 from flask import Flask, jsonify
-from fussballdescraper import get_teams, get_matches
+from match_getter import get_matches
+from teams_getter import get_teams
 from flask_cors import CORS
+from utils.format_utils import format_url, format_team_name
 
 app = Flask(__name__)
 CORS(app)
-
-
-def format_url(url: str) -> str:
-    url = 'https://www.fussball.de/' + url
-    url = url.replace('SLASH', '/')
-    return url + '#!/'
-
-
-def format_team_name(team_name: str) -> str:
-    return team_name.replace('SPACE', ' ')
 
 
 @app.route('/get-teams/<string:league_url>', methods=['GET'])
