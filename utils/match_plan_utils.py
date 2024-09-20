@@ -1,4 +1,5 @@
-from teams_utils import *
+from teams_utils import get_team_logo, get_team_names
+from resources.fussballde_constants import *
 
 
 def get_match_plan_teams(league_url: str) -> list[dict[str, str]]:

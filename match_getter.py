@@ -1,5 +1,6 @@
 from models.match import Match
-from utils.match_plan_utils import *
+from utils.match_plan_utils import get_match_plan_teams
+from utils.teams_utils import format_team_name, format_team_logo_src
 
 
 def get_matches(team_name: str, league_url: str, game_span: int) -> list[Match]:
