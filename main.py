@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
-from fussballdescraper import get_teams, get_matches
+from match_getter import get_matches
+from teams_getter import get_teams
 from flask_cors import CORS
 
 app = Flask(__name__)
